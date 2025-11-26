@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { 
   Github, 
@@ -130,18 +130,17 @@ const PORTFOLIO_DATA = {
 // --- COMPONENTES VISUALES ---
 
 const StarBackground = () => {
-  const [stars, setStars] = useState([]);
-
-  useEffect(() => {
-    setStars([...Array(50)].map(() => ({
+  const [stars] = useState(() => {
+    if (typeof window === 'undefined') return [];
+    return [...Array(50)].map(() => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
       scale: Math.random() * 0.5 + 0.5,
       yOffset: Math.random() * -100,
       duration: Math.random() * 10 + 10,
       size: Math.random() * 3 + 1
-    })));
-  }, []);
+    }));
+  });
 
   return (
     <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
@@ -380,8 +379,8 @@ export default function App() {
             animate={{ opacity: 1, x: 0 }}
             className="text-xl font-bold text-white flex items-center gap-2"
           >
-            <div className="w-8 h-8 bg-cyan-600 rounded-lg flex items-center justify-center shadow-lg shadow-cyan-500/20">
-               <Terminal className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 bg-cyan-600 rounded-lg flex items-center justify-center shadow-lg shadow-cyan-500/20 overflow-hidden">
+               <img src="/logo.svg" alt="Logo" className="w-full h-full object-cover" />
             </div>
             <span className="tracking-tight">J<span className="text-cyan-400">C</span>O</span>
           </motion.div>
