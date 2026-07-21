@@ -3,12 +3,272 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  --bg: #0f0f0f;
+  --bg-warm: #141412;
+  --surface: #1a1a17;
+  --surface-elevated: #222220;
+  --border: #2a2a26;
+  --border-hover: #3a3a35;
+  --text-primary: #f5f0e8;
+  --text-secondary: #a8a296;
+  --text-muted: #6b6560;
+  --accent: #f59e0b;
+  --accent-hover: #fbbf24;
+  --accent-dim: rgba(245, 158, 11, 0.1);
+  --cube-border: rgba(245, 158, 11, 0.4);
+  --cube-bg: rgba(245, 158, 11, 0.03);
+  --ring-border: rgba(245, 158, 11, 0.3);
+  --ring-inner: rgba(245, 158, 11, 0.2);
+  --noise-opacity: 0.03;
+}
+
+[data-theme="light"] {
+  --bg: #faf8f5;
+  --bg-warm: #f3efe8;
+  --surface: #ffffff;
+  --surface-elevated: #f0ece4;
+  --border: #e0dbd2;
+  --border-hover: #c8c1b6;
+  --text-primary: #1a1815;
+  --text-secondary: #5c564e;
+  --text-muted: #9a9389;
+  --accent: #d97706;
+  --accent-hover: #b45309;
+  --accent-dim: rgba(217, 119, 6, 0.08);
+  --cube-border: rgba(217, 119, 6, 0.35);
+  --cube-bg: rgba(217, 119, 6, 0.04);
+  --ring-border: rgba(217, 119, 6, 0.25);
+  --ring-inner: rgba(217, 119, 6, 0.15);
+  --noise-opacity: 0.015;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke, opacity;
+  transition-timing-function: ease;
+  transition-duration: 0.35s;
 }
 
 body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background-color: #020617;
+  background-color: var(--bg);
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-primary);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+::selection {
+  background-color: rgba(245, 158, 11, 0.3);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+.bg-dot-pattern {
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ─── 3D Wireframe Cube ─── */
+.cube-scene {
+  perspective: 800px;
+  width: 240px;
+  height: 240px;
+}
+
+.cube {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: cubeRotate 18s linear infinite;
+}
+
+.cube__face {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border: 1.5px solid var(--cube-border);
+  background: var(--cube-bg);
+}
+
+.cube__face--front  { transform: rotateY(0deg) translateZ(120px); }
+.cube__face--back   { transform: rotateY(180deg) translateZ(120px); }
+.cube__face--right  { transform: rotateY(90deg) translateZ(120px); }
+.cube__face--left   { transform: rotateY(-90deg) translateZ(120px); }
+.cube__face--top    { transform: rotateX(90deg) translateZ(120px); }
+.cube__face--bottom { transform: rotateX(-90deg) translateZ(120px); }
+
+@keyframes cubeRotate {
+  0%   { transform: rotateX(-20deg) rotateY(0deg); }
+  100% { transform: rotateX(-20deg) rotateY(360deg); }
+}
+
+/* ─── 3D Floating Ring ─── */
+.ring-scene {
+  perspective: 600px;
+}
+
+.ring {
+  width: 360px;
+  height: 360px;
+  border: 2px solid var(--ring-border);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  animation: ringFloat 10s ease-in-out infinite;
+  position: relative;
+}
+
+.ring::before,
+.ring::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--ring-inner);
+  border-radius: 50%;
+}
+
+.ring::before {
+  transform: rotateX(60deg);
+}
+
+.ring::after {
+  transform: rotateY(60deg);
+}
+
+@keyframes ringFloat {
+  0%, 100% { transform: rotateX(20deg) rotateY(0deg) translateY(0px); }
+  25%      { transform: rotateX(35deg) rotateY(90deg) translateY(-20px); }
+  50%      { transform: rotateX(20deg) rotateY(180deg) translateY(0px); }
+  75%      { transform: rotateX(5deg) rotateY(270deg) translateY(20px); }
+}
+
+/* ─── Hero Crosshair Decoration ─── */
+.crosshair {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.crosshair::before,
+.crosshair::after {
+  content: '';
+  position: absolute;
+  background: var(--accent);
+}
+
+.crosshair::before {
+  width: 1.5px;
+  height: 100%;
+  left: 50%;
+  top: 0;
+  opacity: 0.6;
+}
+
+.crosshair::after {
+  width: 100%;
+  height: 1.5px;
+  top: 50%;
+  left: 0;
+  opacity: 0.6;
+}
+
+/* ─── Subtle animated vertical line ─── */
+.hero-line {
+  width: 1.5px;
+  height: 160px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  opacity: 0.5;
+  animation: lineGrow 2s ease-out forwards;
+}
+
+@keyframes lineGrow {
+  from { height: 0; opacity: 0; }
+  to   { height: 160px; opacity: 0.5; }
+}
+
+/* ─── Marquee Ticker ─── */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 30s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─── Floating particle dots ─── */
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+  25%      { transform: translateY(-20px) translateX(10px); opacity: 0.6; }
+  50%      { transform: translateY(-10px) translateX(-5px); opacity: 0.4; }
+  75%      { transform: translateY(-30px) translateX(8px); opacity: 0.5; }
+}
+
+/* ─── Pulse ring on CTA ─── */
+.pulse-ring {
+  position: relative;
+}
+
+.pulse-ring::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1.5px solid var(--accent);
+  border-radius: inherit;
+  opacity: 0;
+  animation: pulseRing 2.5s ease-out infinite;
+}
+
+@keyframes pulseRing {
+  0%   { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.15); }
+}
+
+/* ─── Hover line reveal ─── */
+.line-reveal {
+  position: relative;
+}
+
+.line-reveal::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.line-reveal:hover::after {
+  width: 100%;
+}
+
+/* ─── Experience row hover ─── */
+.exp-row {
+  transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+.exp-row:hover {
+  background-color: var(--accent-dim);
+  padding-left: 8px;
 }
