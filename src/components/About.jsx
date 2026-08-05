@@ -1,4 +1,4 @@
-import { ArrowUpRight, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { profile, stats } from "../data/portfolio";
 import { Counter, Reveal, SectionHeading } from "./ui";
 
@@ -7,15 +7,10 @@ const infoRows = [
   {
     label: "Currently",
     value: (
-      <a
-        href="https://catalog.abasa.app/"
-        target="_blank"
-        rel="noreferrer"
-        className="group inline-flex items-center gap-1 transition-colors duration-300 hover:text-[var(--accent)]"
-      >
-        ABASA — ERP Platform
-        <ArrowUpRight size={13} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-      </a>
+      <span className="inline-flex items-center gap-2">
+        <span className="dot-pulse h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
+        Open to Work
+      </span>
     ),
   },
   { label: "Focus", value: "ERP · AI systems · Web platforms" },
@@ -64,8 +59,7 @@ export default function About() {
             <Reveal delay={0.16}>
               <p className="mt-4 max-w-2xl leading-relaxed text-[var(--text-secondary)]">
                 Recognized at <span className="font-medium text-[var(--text-primary)]">HackMTY</span> for
-                developing a Multi-Agent Protocol solution — currently shipping full-stack ERP features at{" "}
-                <span className="font-medium text-[var(--text-primary)]">ABASA</span>.
+                developing a Multi-Agent Protocol solution.
               </p>
             </Reveal>
 
